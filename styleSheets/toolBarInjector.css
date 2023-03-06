@@ -1,0 +1,18 @@
+.bot-toolbar-title {
+    font-size : 20px;
+    color     : #90969C;
+}
+
+.bot-toolbar-components {
+    color          : #90969C;
+    padding-right  : 10px;
+    padding-top    : var(--bs-navbar-brand-padding-y);
+    padding-bottom : var(--bs-navbar-brand-padding-y);
+    margin-right   : var(--bs-navbar-brand-margin-end);
+}
+
+.bot-toolbar-input {
+    width         : 50px;
+    border-radius : 0.375rem;
+}
+
