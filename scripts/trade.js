@@ -1,13 +1,11 @@
 //发布求购
-function postWanted(customWearAmountMin, customWearAmountMax, wantedPrice, wantedAmount, paymentMethod, unlockStyle) {
+function postWanted(goodsID, customWearAmountMin, customWearAmountMax, wantedPrice, wantedAmount, paymentMethod, unlockStyle) {
     const observerConfig = {
-        childList        : true,
-        subtree          : true,
-        attributes       : true,
-        attributeOldValue: true
+        childList: true, subtree: true, attributes: true, attributeOldValue: true
     };
     const bodyNode       = document.getElementsByTagName("body").item(0);
 
+    //初始化磨损输入栏监听器
     const setWearAmountObserver = new MutationObserver((mutationList, observer) => {
         for (let mutation of mutationList) {
             if (mutation.target.id === "loading-cover" && mutation.attributeName === "style" && mutation.oldValue === "display: block;") {
@@ -74,9 +72,22 @@ function postWanted(customWearAmountMin, customWearAmountMax, wantedPrice, wante
         }
     });
 
+    //初始化支付完成监听器
+    const popUpPaymentCompleteObserver = new MutationObserver((mutationList, observer) => {
+        for (let mutation of mutationList) {
+            if (mutation.target.id === "j_w-Toast" && mutation.target.className === "w-Toast_success" && mutation.type === "attributes" && mutation.target.style.getPropertyValue("display") === "block") {
+                observer.disconnect();
+                //持久化求购数据
+                const wantedData = new WantedData(customWearAmountMin, customWearAmountMax, wantedPrice, wantedAmount, paymentMethod, unlockStyle);
+                callSaveDataToChromeLocalStorage(goodsID, JSON.stringify(wantedData));
+            }
+        }
+    });
+
     popupPriceTooHighObserver.observe(bodyNode, observerConfig);
     popupWantedOptionsObserver.observe(bodyNode, observerConfig);
     popupPaymentOptionsObserver.observe(bodyNode, observerConfig);
+    popUpPaymentCompleteObserver.observe(bodyNode, observerConfig);
     document.getElementsByClassName("i_Btn i_Btn_mid i_Btn_D_red btn-supply-buy").item(0).click();
 }
 
@@ -93,10 +104,7 @@ function setStyle(unlockStyle) {
 //设置求购磨损
 function setWearAmount(customWearAmountMin, customWearAmountMax) {
     const observerConfig            = {
-        childList      : true,
-        subtree        : true,
-        attributes     : true,
-        attributeFilter: ["display"]
+        childList: true, subtree: true, attributes: true, attributeFilter: ["display"]
     };
     const popupContainer            = document.getElementById("popup-container");
     const wearAmountConfirmObserver = new MutationObserver((mutationList, observer) => {
@@ -120,8 +128,7 @@ function setWearAmount(customWearAmountMin, customWearAmountMax) {
 function setWantedPrice(wantedPrice) {
     //初始化input事件
     const inputEvent = new Event('input', {
-        bubbles   : true,
-        cancelable: true
+        bubbles: true, cancelable: true
     });
     const price      = document.getElementsByClassName("i_Text j_filter buyPrice").item(0);
     //设置单价
@@ -133,8 +140,7 @@ function setWantedPrice(wantedPrice) {
 //设置求购数量
 function setWantedAmount(wantedAmount) {
     const inputEvent = new Event('input', {
-        bubbles   : true,
-        cancelable: true
+        bubbles: true, cancelable: true
     });
     const amount     = document.getElementsByTagName("input").namedItem("num");
     amount.value     = wantedAmount;

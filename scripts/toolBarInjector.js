@@ -66,18 +66,38 @@ paymentMethodSelect.appendChild(document.createElement("select"));
 paymentMethodSelect.className            = "bot-toolbar-components";
 paymentMethodSelect.firstChild.className = "form-select";
 paymentMethodSelect.firstChild.id        = "botPaymentMethod";
-let paymentMethodOption_1                = document.createElement("option");
-let paymentMethodOption_2                = document.createElement("option");
-let paymentMethodOption_3                = document.createElement("option");
-let paymentMethodOption_4                = document.createElement("option");
-paymentMethodOption_1.value              = "0";
-paymentMethodOption_1.textContent        = "BUFF余额-支付宝";
-paymentMethodOption_2.value              = "1";
-paymentMethodOption_2.textContent        = "BUFF余额-银行卡";
-paymentMethodOption_3.value              = "2";
-paymentMethodOption_3.textContent        = "BUFF余额-现求后付";
-paymentMethodOption_4.value              = "3";
-paymentMethodOption_4.textContent        = "微信支付";
+//读取历史设置
+if (callGetDataFromChromeLocalStorage(getGoodsID())) {
+    let paymentMethodOption   = document.createElement("option");
+    paymentMethodOption.value = JSON.parse(callGetDataFromChromeLocalStorage(getGoodsID())).paymentMethod;
+    switch (JSON.parse(callGetDataFromChromeLocalStorage(getGoodsID())).paymentMethod) {
+        case 0:
+            paymentMethodOption.textContent = "BUFF余额-支付宝";
+            break;
+        case 1:
+            paymentMethodOption.textContent = "BUFF余额-银行卡";
+            break;
+        case 2:
+            paymentMethodOption.textContent = "BUFF余额-先求后付";
+            break;
+        case 3:
+            paymentMethodOption.textContent = "微信支付";
+            break;
+    }
+    paymentMethodSelect.firstChild.appendChild(paymentMethodOption);
+}
+let paymentMethodOption_1         = document.createElement("option");
+let paymentMethodOption_2         = document.createElement("option");
+let paymentMethodOption_3         = document.createElement("option");
+let paymentMethodOption_4         = document.createElement("option");
+paymentMethodOption_1.value       = "0";
+paymentMethodOption_1.textContent = "BUFF余额-支付宝";
+paymentMethodOption_2.value       = "1";
+paymentMethodOption_2.textContent = "BUFF余额-银行卡";
+paymentMethodOption_3.value       = "2";
+paymentMethodOption_3.textContent = "BUFF余额-先求后付";
+paymentMethodOption_4.value       = "3";
+paymentMethodOption_4.textContent = "微信支付";
 paymentMethodSelect.firstChild.appendChild(paymentMethodOption_1);
 paymentMethodSelect.firstChild.appendChild(paymentMethodOption_2);
 paymentMethodSelect.firstChild.appendChild(paymentMethodOption_3);
@@ -99,7 +119,14 @@ if (document.getElementsByClassName("w-Select-Multi w-Select-scroll black").item
     unlockStyleSelect.className            = "bot-toolbar-components";
     unlockStyleSelect.firstChild.className = "form-select";
     unlockStyleSelect.firstChild.id        = "botUnlockStyle";
-    unlockStyleSelectExistNodes            = document.getElementsByClassName("w-Select-Multi w-Select-scroll black").item(0).childNodes.item(4).childNodes;
+    //读取历史设置
+    if (callGetDataFromChromeLocalStorage(getGoodsID())) {
+        let unlockStyleOption         = document.createElement("option");
+        unlockStyleOption.value       = JSON.parse(callGetDataFromChromeLocalStorage(getGoodsID())).unlockStyle;
+        unlockStyleOption.textContent = JSON.parse(callGetDataFromChromeLocalStorage(getGoodsID())).unlockStyle;
+        unlockStyleSelect.firstChild.appendChild(unlockStyleOption);
+    }
+    unlockStyleSelectExistNodes = document.getElementsByClassName("w-Select-Multi w-Select-scroll black").item(0).childNodes.item(4).childNodes;
     unlockStyleSelectExistNodes.forEach(function(currentValue, currentIndex, listObj) {
         if (currentValue.nodeName === "LI") {
             let unlockStyleNodeCache         = document.createElement("option");
@@ -111,7 +138,7 @@ if (document.getElementsByClassName("w-Select-Multi w-Select-scroll black").item
     });
 }
 
-
+const goodsID = getGoodsID();
 //构造工具栏
 toolBarContainer.appendChild(toolbarTitle);
 if (document.getElementsByClassName("w-Select-Multi w-Select-scroll black").item(0).getAttribute("data-title") === "款式筛选") {
@@ -165,14 +192,19 @@ function doPostWanted() {
     }
     botPaymentMethod = parseInt(document.getElementById("botPaymentMethod").value);
 
-    postWanted(botWearAmountMin, botWearAmountMax, botPriceMax, botWantedAmount, botPaymentMethod, botUnlockStyle);
+    postWanted(goodsID, botWearAmountMin, botWearAmountMax, botPriceMax, botWantedAmount, botPaymentMethod, botUnlockStyle);
 }
 
 //设置默认磨损度
 function setDefaultWearAmount() {
-    const wearAmountList                                    = document.getElementById("paintwear_list").childNodes;
-    document.getElementById("botWearAmountMin").placeholder = parseFloat(wearAmountList.item(3).childNodes.item(1).textContent.split("-")[0]);
-    document.getElementById("botWearAmountMax").placeholder = parseFloat(wearAmountList.item(wearAmountList.length - 4).childNodes.item(1).textContent.split("-")[1]);
+    const wearAmountList = document.getElementById("paintwear_list").childNodes;
+    if (callGetDataFromChromeLocalStorage(getGoodsID())) {
+        document.getElementById("botWearAmountMin").placeholder = JSON.parse(callGetDataFromChromeLocalStorage(getGoodsID())).customWearAmountMin;
+        document.getElementById("botWearAmountMax").placeholder = JSON.parse(callGetDataFromChromeLocalStorage(getGoodsID())).customWearAmountMax;
+    } else {
+        document.getElementById("botWearAmountMin").placeholder = parseFloat(wearAmountList.item(3).childNodes.item(1).textContent.split("-")[0]);
+        document.getElementById("botWearAmountMax").placeholder = parseFloat(wearAmountList.item(wearAmountList.length - 4).childNodes.item(1).textContent.split("-")[1]);
+    }
 }
 
 //设置默认价格

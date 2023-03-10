@@ -11,8 +11,12 @@
   },
   "permissions": [
     "tabs",
-    "storage"
+    "storage",
+    "unlimitedStorage"
   ],
+  "externally_connectable": {
+    "matches": ["https://buff.163.com/goods/*"]
+  },
   "page_action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -24,6 +28,7 @@
   },
   "background": {
     "scripts": [
+      "scripts/monitorTools.js",
       "scripts/monitor.js"
     ],
     "persistent": false
@@ -41,6 +46,7 @@
       "js": [
         "scripts/tools.js",
         "scripts/trade.js",
+        "scripts/monitorContent.js",
         "scripts/toolBarInjector.js"
       ]
     }
