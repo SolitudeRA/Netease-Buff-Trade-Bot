@@ -12,10 +12,13 @@
   "permissions": [
     "tabs",
     "storage",
+    "activeTab",
     "unlimitedStorage"
   ],
   "externally_connectable": {
-    "matches": ["https://buff.163.com/goods/*"]
+    "matches": [
+      "https://buff.163.com/goods/*"
+    ]
   },
   "page_action": {
     "default_popup": "popup.html",
@@ -48,6 +51,14 @@
         "scripts/trade.js",
         "scripts/monitorContent.js",
         "scripts/toolBarInjector.js"
+      ]
+    },
+    {
+      "matches": [
+        "https://buff.163.com/market/buy_order/wait_supply?game=csgo"
+      ],
+      "js": [
+        "scripts/waitingSupply.js"
       ]
     }
   ]

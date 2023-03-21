@@ -1,18 +1,22 @@
-.bot-toolbar-title {
-    font-size : 20px;
-    color     : #90969C;
+.script-toolbar {
+    height        : 63px;
+    border        : #6C757D solid 1px;
+    border-radius : 5px;
+    padding-top   : 12px;
 }
 
-.bot-toolbar-components {
-    color          : #90969C;
-    padding-right  : 10px;
-    padding-top    : var(--bs-navbar-brand-padding-y);
-    padding-bottom : var(--bs-navbar-brand-padding-y);
-    margin-right   : var(--bs-navbar-brand-margin-end);
+.script-toolbar-title {
+    color     : #E5E5E5;
+    font-size : 25px;
 }
 
-.bot-toolbar-input {
-    width         : 50px;
-    border-radius : 0.375rem;
+.script-toolbar-component-title {
+    color     : #E5E5E5;
+    font-size : 15px;
 }
+
+.script-toolbar-button {
+    width : 150px;
+}
+
 
