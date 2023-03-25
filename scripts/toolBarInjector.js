@@ -32,11 +32,11 @@ toolBar_2.className          = "container-fluid bg-dark script-toolbar";
 let toolBar_3                = document.createElement("div");
 toolBar_3.className          = "container-fluid bg-dark script-toolbar";
 let toolBarContainer_1       = document.createElement("div");
-toolBarContainer_1.className = "row d-flex align-items-center justify-content-center";
+toolBarContainer_1.className = "row d-flex align-items-center";
 let toolBarContainer_2       = document.createElement("div");
 toolBarContainer_2.className = "row";
 let toolBarContainer_3       = document.createElement("div");
-toolBarContainer_3.className = "row justify-content-end";
+toolBarContainer_3.className = "row justify-content-between";
 let blank                    = document.createElement("div");
 blank.className              = "blank20";
 let blank_2                  = document.createElement("div");
@@ -51,7 +51,7 @@ mountItemDataToElement(toolbarTitle);
 
 //检测并初始化款式选择栏
 let unlockStyleContainer          = document.createElement("div");
-unlockStyleContainer.className    = "col-3";
+unlockStyleContainer.className    = "col";
 let unlockStyleContainerRow       = document.createElement("div");
 unlockStyleContainerRow.className = "row d-flex align-items-center justify-content-center";
 let unlockStyleTitle              = document.createElement("div");
@@ -79,12 +79,12 @@ unlockStyleContainer.appendChild(unlockStyleContainerRow);
 
 //初始化磨损度输入栏
 let wearAmountInputContainer          = document.createElement("div");
-wearAmountInputContainer.className    = "col-5";
+wearAmountInputContainer.className    = "col";
 let wearAmountInputContainerRow       = document.createElement("div");
 wearAmountInputContainerRow.className = "row d-flex align-items-center justify-content-center";
 let wearAmountInputTitle              = document.createElement("div");
 wearAmountInputTitle.className        = "col-2 script-toolbar-component-title text-center";
-wearAmountInputTitle.textContent      = "磨损度";
+wearAmountInputTitle.textContent      = "磨损";
 let wearAmountMinInput                = document.createElement("div");
 wearAmountMinInput.className          = "col-4";
 wearAmountMinInput.appendChild(document.createElement("input"));
@@ -106,7 +106,7 @@ wearAmountInputContainer.appendChild(wearAmountInputContainerRow);
 
 //初始化求购数量输入栏
 let tradeAmountInputContainer          = document.createElement("div");
-tradeAmountInputContainer.className    = "col-3";
+tradeAmountInputContainer.className    = "col";
 let tradeAmountInputContainerRow       = document.createElement("div");
 tradeAmountInputContainerRow.className = "row d-flex align-items-center justify-content-center";
 let tradeAmountTitle                   = document.createElement("div");
@@ -208,6 +208,24 @@ payMethodSelectContainerRow.appendChild(payMethodSelectTitle);
 payMethodSelectContainerRow.appendChild(paymentMethodSelect);
 payMethodSelectContainer.appendChild(payMethodSelectContainerRow);
 
+//初始化出价次数指示器
+let updatedFlagContainer          = document.createElement("div");
+updatedFlagContainer.className    = "col-3";
+let updatedFlagContainerRow       = document.createElement("div");
+updatedFlagContainerRow.className = "row updatedFlag-container justify-content-center";
+let updatedFlagTitle              = document.createElement("div");
+updatedFlagTitle.className        = "col-6 script-toolbar-component-title updatedFlag text-center";
+updatedFlagTitle.textContent      = "已出价次数";
+let updatedFlag                   = document.createElement("div");
+updatedFlag.className             = "col-6 script-toolbar-component-title updatedFlag";
+updatedFlag.appendChild(document.createElement("span"));
+updatedFlag.firstChild.className   = "updatedFlag-content";
+updatedFlag.firstChild.textContent = "0";
+updatedFlag.firstChild.id          = "scriptUpdatedFlag";
+updatedFlagContainerRow.appendChild(updatedFlagTitle);
+updatedFlagContainerRow.appendChild(updatedFlag);
+updatedFlagContainer.appendChild(updatedFlagContainerRow);
+
 //初始化开始监听按钮
 let startMonitorButtonContainer          = document.createElement("div");
 startMonitorButtonContainer.className    = "col-2";
@@ -262,6 +280,7 @@ toolBarContainer_2.appendChild(priceCurrentInputContainer);
 toolBarContainer_2.appendChild(priceUpStepInputContainer);
 toolBarContainer_2.appendChild(priceMaxInputContainer);
 toolBarContainer_2.appendChild(payMethodSelectContainer);
+toolBarContainer_3.appendChild(updatedFlagContainer);
 toolBar_1.appendChild(toolBarContainer_1);
 toolBar_2.appendChild(toolBarContainer_2);
 injectButtonToElement(toolBarContainer_3);
@@ -283,6 +302,10 @@ const itemListObserver = new MutationObserver((mutationList, observer) => {
         if (mutation.type === "childList") {
             for (let node of mutation.addedNodes) {
                 if (node.className === "pager list-pager light-theme simple-pagination") {
+                    observer.disconnect();
+                    //加载交易信息
+                    existPersistedTradeInformation();
+                } else if (node.className === "pager list-pager") {
                     observer.disconnect();
                     //加载交易信息
                     existPersistedTradeInformation();
@@ -310,12 +333,38 @@ itemListObserver.observe(bodyNode, observerConfig);
 
 /*========================================================================================
 
-    调用发布求购工具函数
+    调用监听器管理函数
 
 =========================================================================================*/
 
-async function doPostWanted() {
+function activateMonitor() {
+    buildTradeInformation().then((tradeInformation) => {
+        chrome.runtime.sendMessage({action: "activateMonitor", payload: tradeInformation}, function(response) {
+            if (response.status === true) {
+                console.log("Activated monitor with trade information: " + tradeInformation);
+            } else {
+                console.log("Activate monitor failed");
+            }
+        });
+    });
+}
 
+function updateMonitor() {
+    buildTradeInformation().then((tradeInformation) => {
+        chrome.runtime.sendMessage({action: "updateMonitor", payload: tradeInformation}, function(response) {
+            if (response.status === true) {
+                console.log("Updated monitor with trade information: " + tradeInformation);
+            } else {
+                console.log("Update monitor failed");
+            }
+        });
+    });
+}
+
+function deactivateMonitor() {
+    chrome.runtime.sendMessage({action: ""}, function(response) {
+
+    });
 }
 
 /*========================================================================================
@@ -356,12 +405,12 @@ function existPersistedTradeInformation() {
                     }
                 }
             }
-            wearAmountMinInput.firstChild.placeholder = tradeInformation.customWearAmountMin;
-            wearAmountMaxInput.firstChild.placeholder = tradeInformation.customWearAmountMax;
-            tradeAmountInput.firstChild.placeholder   = tradeInformation.tradeAmount;
-            priceCurrentInput.firstChild.placeholder  = tradeInformation.tradePriceCurrent + tradeInformation.priceUpStep;
-            priceUpStepInput.firstChild.placeholder   = tradeInformation.priceUpStep;
-            priceMaxInput.firstChild.placeholder      = tradeInformation.tradePriceMax;
+            wearAmountMinInput.firstChild.value = tradeInformation.customWearAmountMin;
+            wearAmountMaxInput.firstChild.value = tradeInformation.customWearAmountMax;
+            tradeAmountInput.firstChild.value   = tradeInformation.tradeAmount;
+            priceCurrentInput.firstChild.value  = tradeInformation.tradePriceCurrent + tradeInformation.priceUpStep;
+            priceUpStepInput.firstChild.value   = tradeInformation.priceUpStep;
+            priceMaxInput.firstChild.value      = tradeInformation.tradePriceMax;
             for (let childNode of paymentMethodSelect.firstChild.childNodes) {
                 if (childNode.value === tradeInformation.paymentMethod) {
                     childNode.selected = true;
@@ -376,13 +425,13 @@ function existPersistedTradeInformation() {
             if (document.getElementsByClassName("w-Select-Multi w-Select-scroll black").item(0).getAttribute("data-title") === "款式筛选") {
                 unlockStyle = unlockStyleSelectElement.value;
             }
-            wearAmountMinInput.firstChild.placeholder = wearAmountMin;
-            wearAmountMaxInput.firstChild.placeholder = wearAmountMax;
-            tradeAmountInput.firstChild.placeholder   = 1;
+            wearAmountMinInput.firstChild.value = wearAmountMin;
+            wearAmountMaxInput.firstChild.value = wearAmountMax;
+            tradeAmountInput.firstChild.value   = 1;
             getCurrentHighestPrice(unlockStyle, wearAmountMin, wearAmountMax).then((highestPrice) => {
-                priceCurrentInput.firstChild.placeholder = highestPrice + getUpPrice(highestPrice);
-                priceUpStepInput.firstChild.placeholder  = getUpPrice(highestPrice);
-                priceMaxInput.firstChild.placeholder     = highestPrice + getUpPrice(highestPrice) * 2;
+                priceCurrentInput.firstChild.value = highestPrice + getUpPrice(highestPrice);
+                priceUpStepInput.firstChild.value  = getUpPrice(highestPrice);
+                priceMaxInput.firstChild.value     = highestPrice + getUpPrice(highestPrice) * 2;
             });
         } else {
             throwError("existPersistedTradeInformation error");

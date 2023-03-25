@@ -9,11 +9,14 @@
 
 #########################################################################################*/
 
+//
 chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse) {
     if (request.action === "getCurrentHighestPrice") {
         let currentHighestPrice = await getCurrentHighestPrice(request.payload);
         sendResponse(currentHighestPrice);
     }
+
+    return true;
 });
 
 //请求初始化监听器

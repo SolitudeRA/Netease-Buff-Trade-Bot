@@ -49,8 +49,8 @@
       "js": [
         "scripts/tools.js",
         "scripts/trade.js",
-        "scripts/monitorContent.js",
-        "scripts/toolBarInjector.js"
+        "scripts/toolBarInjector.js",
+        "scripts/monitorContent.js"
       ]
     },
     {
