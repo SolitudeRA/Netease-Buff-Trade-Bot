@@ -1,0 +1,26 @@
+body {
+    width: 730px;
+    background-color: #2c3034;
+    padding: 20px 10px 20px 10px;
+}
+
+.card-background {
+    background-color: #6e6f78;
+}
+
+.card-row {
+    margin-bottom: 25px;
+}
+
+.image-background {
+    background-image: url("/assets/images/item_bg.png");
+    background-size: cover;
+}
+
+.button-margin-fix {
+    margin-right: 10px;
+}
+
+.update-flag-margin-fix {
+    margin-left: 140px;
+}
