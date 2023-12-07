@@ -2,12 +2,12 @@
   "manifest_version": 2,
   "name": "网易BUFF自动求购",
   "description": "Developed by SolitudeRA for only private usage.",
-  "version": "0.1",
+  "version": "0.8",
   "icons": {
-    "16": "images/icon-16.png",
-    "32": "images/icon-32.png",
-    "48": "images/icon-48.png",
-    "128": "images/icon-128.png"
+    "16": "assets/images/icon-16.png",
+    "32": "assets/images/icon-32.png",
+    "48": "assets/images/icon-48.png",
+    "128": "assets/images/icon-128.png"
   },
   "permissions": [
     "tabs",
@@ -20,21 +20,28 @@
       "https://buff.163.com/goods/*"
     ]
   },
-  "page_action": {
+  "browser_action": {
+    "default_title": "网易BUFF交易BOT",
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "images/icon-16.png",
-      "32": "images/icon-32.png",
-      "48": "images/icon-48.png",
-      "128": "images/icon-128.png"
+      "16": "assets/images/icon-16.png",
+      "32": "assets/images/icon-32.png",
+      "48": "assets/images/icon-48.png",
+      "128": "assets/images/icon-128.png"
     }
   },
   "background": {
     "scripts": [
+      "scripts/database.js",
+      "scripts/tabManagement.js",
+      "scripts/toolsBackend.js",
+      "scripts/tradingBackend.js",
+      "scripts/supplyBackend.js",
       "scripts/monitorTools.js",
-      "scripts/monitor.js"
+      "scripts/taskSchedule.js",
+      "scripts/monitorBackend.js"
     ],
-    "persistent": false
+    "persistent": true
   },
   "content_security_policy": "script-src 'self' http://localhost:*; object-src 'self'",
   "content_scripts": [
@@ -44,13 +51,14 @@
       ],
       "css": [
         "assets/bootstrap.min.css",
-        "styleSheets/toolBarInjector.css"
+        "styleSheets/interfaceInjector.css"
       ],
       "js": [
-        "scripts/tools.js",
-        "scripts/trade.js",
-        "scripts/toolBarInjector.js",
-        "scripts/monitorContent.js"
+        "assets/bootstrap.min.js",
+        "scripts/toolsFrontend.js",
+        "scripts/tradingFrontend.js",
+        "scripts/monitorFrontend.js",
+        "scripts/interfaceInjector.js"
       ]
     },
     {
@@ -58,7 +66,10 @@
         "https://buff.163.com/market/buy_order/wait_supply?game=csgo"
       ],
       "js": [
-        "scripts/waitingSupply.js"
+        "assets/bootstrap.min.js",
+        "scripts/toolsFrontend.js",
+        "scripts/supplyFrontend.js",
+        "scripts/monitorFrontend.js"
       ]
     }
   ]

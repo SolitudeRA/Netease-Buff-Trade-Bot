@@ -1,0 +1,45 @@
+.form-control:disabled {
+    background-color: #473c58;
+}
+
+.script-toolbar {
+    border: #404258 solid 1px;
+    border-radius: 5px;
+    padding: 15px 20px 15px 20px;
+}
+
+.script-toolbar-button {
+    width: 150px;
+}
+
+.form-color-fix {
+    color: #FAF0E6;
+    border-color: #5C5470;
+    background: #352F44;
+}
+
+.form-label-color-fix {
+    color: #FAF0E6;
+    border-color: #5C5470;
+    background: #5C5470;
+}
+
+.form-row-margin-fix {
+    margin-right: 0;
+}
+
+.form-row-padding-fix {
+    padding-right: 0;
+}
+
+.form-button-margin-fix {
+    margin-left: 20px;
+}
+
+.form-width-fix {
+    width: 100px;
+}
+
+.float-range-select-fix {
+    padding-right: 12px;
+}

@@ -1,10 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网易BUFF自动求购</title>
+    <link rel="stylesheet" type="text/css" href="/assets/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="popup.css">
 </head>
 <body>
 
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 text-center text-white">
+            <h2 class="h2">求购列表</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <nav class="nav">
+                <a class="nav-link active" aria-current="page" href="#">Active</a>
+                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link" href="#">Link</a>
+                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+            </nav>
+        </div>
+    </div>
+    <div class="row card-row">
+        <div class="col-12">
+            <div class="card card-background">
+                <div class="row g-0">
+                    <div class="col-4 image-background">
+                        <img src="https://g.fp.ps.netease.com/market/file/615417ce35a74b14b38c4c51XMuYFkzx03"
+                             class="card-img-top" alt="...">
+                    </div>
+                    <div class="col-8">
+                        <div class="card-body text-white">
+                            <h5 class="card-title">Card Title 1</h5>
+                            <p class="card-text">test</p>
+                            <p class="card-text">test</p>
+                            <button class="btn btn-success button-margin-fix">更新监听参数</button>
+                            <button class="btn btn-danger">停止监听</button>
+                            <button class="btn btn-dark update-flag-margin-fix">
+                                <span class="badge text-bg-warning">0</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row card-row">
+        <div class="col-12">
+            <div class="card">
+                <div class="row g-0">
+                    <div class="col-4">
+                        <img src="path_to_image" class="card-img-top" alt="...">
+                    </div>
+                    <div class="col-8">
+                        <div class="card-body">
+                            <h5 class="card-title">Card Title 2</h5>
+                            <p class="card-text">test</p>
+                            <a href="#" class="btn btn-primary">Go somewhere</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="popup.js"></script>
 </body>
-</html>
