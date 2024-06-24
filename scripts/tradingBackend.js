@@ -5,7 +5,7 @@
     Version: V0.8
     Author: SolitudeRA
     Github: @SolitudeRA
-    Mail: solitudera@outlook.com
+    Mail: studio@solitudera.com
 
 #########################################################################################*/
 
@@ -18,7 +18,7 @@
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     if (request.action === "getTradeInformation") {
         retrieveTradeInformationDatabase(request.itemId).then((tradeInformation) => {
-            if (tradeInformation !== 0) {
+            if (tradeInformation) {
                 sendResponse({
                     status: true,
                     tradeInformation: tradeInformation

@@ -5,7 +5,7 @@
     Version: V0.8
     Author: SolitudeRA
     Github: @SolitudeRA
-    Mail: solitudera@outlook.com
+    Mail: studio@solitudera.com
 
 #########################################################################################*/
 
@@ -80,8 +80,11 @@ async function buildTradeInformation() {
         }
     }
 
+    const tradeInformation = new TradeInformation(userId, itemId, itemName, unlockStyle, floatRangeMin, floatRangeMax, tradeAmount, tradePriceCurrent, priceUpStep, tradePriceMax, paymentMethod, updatedFlag);
 
-    return new TradeInformation(userId, itemId, itemName, unlockStyle, floatRangeMin, floatRangeMax, tradeAmount, tradePriceCurrent, priceUpStep, tradePriceMax, paymentMethod, updatedFlag)
+    console.info(`成功打包交易信息 ${tradeInformation}`);
+
+    return tradeInformation;
 }
 
 /* ========================================== 更新款式Filter ========================================== */
@@ -219,14 +222,7 @@ function throwError(message) {
 
 /* ========================================== 计算加价幅度 ========================================== */
 function getUpPrice(price) {
-    if (price < 1000 && price >= 50) {
-        price = 1;
-    } else if (price < 50) {
-        price = 0.1;
-    } else {
-        price = 10;
-    }
-    return price;
+    return price < 50 ? 0.1 : price < 1000 ? 1 : 10;
 }
 
 /* ========================================== 刷新当前页面 ========================================== */

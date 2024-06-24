@@ -5,7 +5,7 @@
     Version: V0.8
     Author: SolitudeRA
     Github: @SolitudeRA
-    Mail: solitudera@outlook.com
+    Mail: studio@solitudera.com
 
 #########################################################################################*/
 
@@ -25,8 +25,9 @@ function initializeMonitorFrontEnd(tradeInformation) {
         }, (response) => {
             if (response.status) {
                 resolve(response.status);
+                console.info(COMPONENT_NAME_MONITOR_INSTANCE + LOG_INFO_SEPARATOR + LOG_INFO_INITIALIZED)
             } else {
-                console.log("Frontend initializing monitor error")
+                console.error(EXCEPTION_TRACE_FRONTEND + LOG_INFO_SEPARATOR + COMPONENT_NAME_MONITOR_INSTANCE + LOG_INFO_SEPARATOR + EXCEPTION_SUFFIX_INITIALIZE);
             }
         });
     });

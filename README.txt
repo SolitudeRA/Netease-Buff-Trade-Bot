@@ -1,0 +1,1 @@
+Chrome Extensionに基づいてのNetease Buff自動競売ボットのソースコードです。

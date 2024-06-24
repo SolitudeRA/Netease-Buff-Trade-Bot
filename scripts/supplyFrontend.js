@@ -5,7 +5,7 @@
     Version: V0.8
     Author: SolitudeRA
     Github: @SolitudeRA
-    Mail: solitudera@outlook.com
+    Mail: studio@solitudera.com
 
 #########################################################################################*/
 
@@ -22,13 +22,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
         });
     }
 
-    if (request.action === "retrieveWantedStatus") {
-        retrieveWantedStatus(request.tradeInformation).then((wantedStatus) => {
-            sendResponse({
-                status: true,
-                wantedStatus: wantedStatus
-            })
-        });
+    if (request.action === "retrievePostingWantedStatus") {
+        retrievePostingWantedStatusFrontend(request.itemId).then((result) => {
+            if (result === true) {
+                sendResponse({status: true});
+            } else {
+                sendResponse({status: false});
+            }
+        })
     }
 
     return true;
@@ -98,6 +99,18 @@ async function cancelWantedFrontend(itemID) {
 }
 
 // 查询求购状态
-async function retrieveWantedStatus(tradeInformation) {
-  const supplyTableHeadList = document.getElementsByClassName("detail-tab-cont").item(0).getElementsByTagName("thead").item(0).getElementsByTagName("tr").item(0).getElementsByTagName("th")
+async function retrievePostingWantedStatusFrontend(itemID) {
+    let itemList = document.getElementsByClassName("list_tb_csgo").item(0).getElementsByTagName("tr");
+
+    return new Promise((resolve) => {
+        for (let itemRow of itemList) {
+            if (itemRow.getElementsByTagName("td").item(2) !== null) {
+                if (itemRow.getElementsByTagName("td").item(2).getElementsByTagName("a").item(0).href.slice(27) === itemID) {
+                    resolve(true);
+                    break;
+                }
+            }
+        }
+        resolve(false);
+    });
 }

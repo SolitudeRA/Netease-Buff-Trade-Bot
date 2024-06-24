@@ -32,12 +32,15 @@
   },
   "background": {
     "scripts": [
+      "scripts/global.js",
+      "scripts/logging.js",
+      "scripts/randomGenerator.js",
       "scripts/database.js",
+      "scripts/operateQueue.js",
       "scripts/tabManagement.js",
       "scripts/toolsBackend.js",
       "scripts/tradingBackend.js",
       "scripts/supplyBackend.js",
-      "scripts/monitorTools.js",
       "scripts/taskSchedule.js",
       "scripts/monitorBackend.js"
     ],
@@ -63,7 +66,7 @@
     },
     {
       "matches": [
-        "https://buff.163.com/market/buy_order/wait_supply?game=csgo"
+        "https://buff.163.com/market/buy_order/wait_supply?game=csgo*"
       ],
       "js": [
         "assets/bootstrap.min.js",

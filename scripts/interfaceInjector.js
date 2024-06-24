@@ -5,7 +5,7 @@
     Version: V0.8
     Author: SolitudeRA
     Github: @SolitudeRA
-    Mail: solitudera@outlook.com
+    Mail: studio@solitudera.com
 
 #########################################################################################*/
 
@@ -509,6 +509,7 @@ function injectButtonToElement(element) {
 async function switchToWantedTab() {
     return new Promise((resolve) => {
         getCurrentURL().then((currentURL) => {
+            // 如果当前URL参数包含当前求购列表，则跳过
             if (currentURL.includes("#tab=buying")) {
                 resolve();
             } else {
@@ -525,48 +526,53 @@ async function initializeToolbarInformation() {
     console.log("\n尝试加载已保存的交易信息...");
     const changeEvent = new Event("change");
     const response = await retrievePersistedTradeInformation(getItemId());
-    if (response.status === true) {
-        tradeInformationLoadFlag = true;
-        console.log("已查询到已保存的交易信息，加载交易信息至工具栏...");
-        const tradeInformation = response.tradeInformation;
-        if (document.getElementById("scriptUnlockStyle")) {
-            document.getElementById("scriptUnlockStyle").value = tradeInformation.unlockStyle;
-            document.getElementById("scriptUnlockStyle").dispatchEvent(changeEvent);
-        }
-        if (document.getElementById("scriptWearAmountMin") && document.getElementById("scriptWearAmountMax")) {
-            if (tradeInformation.floatRangeMin === -1 && tradeInformation.floatRangeMax === -1) {
-                floatRangeSelect.value = "不限";
-                floatRangeSelect.dispatchEvent(changeEvent);
+    return new Promise((resolve, reject) => {
+        if (response.status === true) {
+            console.log("已查询到已保存的交易信息，加载交易信息至工具栏...");
+            tradeInformationLoadFlag = true;
+            const tradeInformation = response.tradeInformation;
+            if (document.getElementById("scriptUnlockStyle")) {
+                document.getElementById("scriptUnlockStyle").value = tradeInformation.unlockStyle;
+                document.getElementById("scriptUnlockStyle").dispatchEvent(changeEvent);
             }
-            for (let floatRangeOption of floatRangeSelect.childNodes) {
-                let floatRangeOptionValues = floatRangeOption.value.split("-");
-                if (floatRangeOptionValues.includes(tradeInformation.floatRangeMin.toString()) && floatRangeOptionValues.includes(tradeInformation.floatRangeMax.toString())) {
-                    floatRangeSelect.value = floatRangeOption.value;
+            if (document.getElementById("scriptWearAmountMin") && document.getElementById("scriptWearAmountMax")) {
+                if (tradeInformation.floatRangeMin === -1 && tradeInformation.floatRangeMax === -1) {
+                    floatRangeSelect.value = "不限";
                     floatRangeSelect.dispatchEvent(changeEvent);
                 }
+                for (let floatRangeOption of floatRangeSelect.childNodes) {
+                    let floatRangeOptionValues = floatRangeOption.value.split("-");
+                    if (floatRangeOptionValues.includes(tradeInformation.floatRangeMin.toString()) && floatRangeOptionValues.includes(tradeInformation.floatRangeMax.toString())) {
+                        floatRangeSelect.value = floatRangeOption.value;
+                        floatRangeSelect.dispatchEvent(changeEvent);
+                    }
+                }
+                floatRangeSelect.value = "自定义";
+                floatRangeSelect.dispatchEvent(changeEvent);
+                document.getElementById("scriptWearAmountMin").value = tradeInformation.floatRangeMin;
+                document.getElementById("scriptWearAmountMax").value = tradeInformation.floatRangeMax;
+                document.getElementById("scriptWearAmountMax").dispatchEvent(changeEvent);
             }
-            floatRangeSelect.value = "自定义";
-            floatRangeSelect.dispatchEvent(changeEvent);
-            document.getElementById("scriptWearAmountMin").value = tradeInformation.floatRangeMin;
-            document.getElementById("scriptWearAmountMax").value = tradeInformation.floatRangeMax;
-            document.getElementById("scriptWearAmountMax").dispatchEvent(changeEvent);
+            document.getElementById("scriptTradeAmount").value = tradeInformation.tradeAmount;
+            document.getElementById("scriptTradePriceCurrent").value = tradeInformation.tradePriceCurrent;
+            document.getElementById("scriptPriceUpStep").value = tradeInformation.priceUpStep;
+            document.getElementById("scriptTradePriceMax").value = tradeInformation.tradePriceMax;
+            document.getElementById("scriptPaymentMethod").value = tradeInformation.paymentMethod;
+            document.getElementById("scriptUpdatedFlag").value = tradeInformation.updatedFlag;
+            document.getElementById("scriptUpdatedFlag").textContent = tradeInformation.updatedFlag;
+            console.log("已成功加载交易信息至工具栏\n");
+            resolve();
+        } else {
+            console.log("未查询到已保存的交易信息，执行默认设定...");
+            tradeInformationLoadFlag = false;
+            document.getElementById("scriptTradeAmount").value = 1;
+            updateToolbarPriceInformation().then(() => {
+                document.getElementById("scriptUpdatedFlag").textContent = "0";
+                console.log("默认设定已加载至工具栏\n");
+                resolve();
+            });
         }
-        document.getElementById("scriptTradeAmount").value = tradeInformation.tradeAmount;
-        document.getElementById("scriptTradePriceCurrent").value = tradeInformation.tradePriceCurrent;
-        document.getElementById("scriptPriceUpStep").value = tradeInformation.priceUpStep;
-        document.getElementById("scriptTradePriceMax").value = tradeInformation.tradePriceMax;
-        document.getElementById("scriptPaymentMethod").value = tradeInformation.paymentMethod;
-        document.getElementById("scriptUpdatedFlag").value = tradeInformation.updatedFlag;
-        document.getElementById("scriptUpdatedFlag").textContent = tradeInformation.updatedFlag;
-        console.log("已成功加载交易信息至工具栏\n");
-    } else {
-        tradeInformationLoadFlag = false;
-        console.log("未查询到已保存的交易信息，执行默认设定...");
-        document.getElementById("scriptTradeAmount").value = 1;
-        await updateToolbarPriceInformation();
-        document.getElementById("scriptUpdatedFlag").textContent = "0";
-        console.log("默认设定已加载至工具栏\n");
-    }
+    })
 }
 
 // 更新工具栏出价信息
@@ -594,7 +600,7 @@ async function getCurrentURL() {
 
 // 切换到当前求购
 async function updateTabToBuying() {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         window.location.href = "https://buff.163.com/goods/" + getItemId() + "#tab=buying";
         resolve();
     });

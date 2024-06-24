@@ -5,7 +5,7 @@
     Version: V0.8
     Author: SolitudeRA
     Github: @SolitudeRA
-    Mail: solitudera@outlook.com
+    Mail: studio@solitudera.com
 
 #########################################################################################*/
 
@@ -47,7 +47,14 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 // TODO:权宜之计
 async function postWanted(tradeInformation) {
     const existUnlockStyle = (document.getElementsByName("unlock_style").length !== 0);
-    const existFloatRange = (document.getElementsByName("float_range").length !== 0);
+    let existFloatRange = false;
+    if (document.getElementsByName("float_range")) {
+        for (let floatRangeBlock of document.getElementsByName("float_range")) {
+            if (floatRangeBlock.style.visibility === "visible") {
+                existFloatRange = true;
+            }
+        }
+    }
     // 封装函数体
     return new Promise((resolve, reject) => {
         // MutationObserver设置
@@ -81,8 +88,8 @@ async function postWanted(tradeInformation) {
         // 发布求购信息栏弹出监听器
         const popupTradeInformationObserver = new MutationObserver(async (mutationList, observer) => {
             for (let mutation of mutationList) {
-                if (document.getElementById("j_select-specific-paintwear") !== null) {
-                    if (window.getComputedStyle(document.getElementById("j_select-specific-paintwear")).visibility === "visible") {
+                if (document.getElementById("j_popup_supply") !== null) {
+                    if (window.getComputedStyle(document.getElementById("j_popup_supply")).display === "block") {
                         observer.disconnect();
                         if (existUnlockStyle) {
                             await setUnlockStyle(tradeInformation.unlockStyle);
