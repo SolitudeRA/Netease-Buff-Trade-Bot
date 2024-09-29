@@ -210,7 +210,7 @@ function getItemName() {
 
 /* ========================================== 获取当前用户名称 ========================================== */
 function getUserID() {
-    const userID = document.getElementById("navbar-user-name");
+    const userID = document.getElementsByClassName("user-name").item(0).innerText;
 
     return userID.innerText;
 }
