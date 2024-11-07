@@ -1,5 +1,9 @@
 # Netease BUFF Trade Bot
 
+<div align="center">
+   <img src="assets/images/icon-128.png" alt="logo">
+</div>
+
 ## Project Overview
 Netease BUFF Trade Bot is an automation bot designed to assist users in executing trades on the third-party game skin marketplace, Netease BUFF. This project is primarily aimed at large-scale traders who require automated trading solutions to reduce manual operations and increase efficiency in buying and selling skins.
 
