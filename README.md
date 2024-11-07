@@ -1,7 +1,7 @@
 # Netease BUFF Trade Bot
 
 <div align="center">
-   <img src="assets/images/icon-128.png" alt="logo">
+   <img src="assets/images/thumbnail.png" alt="logo">
 </div>
 
 ## Project Overview
